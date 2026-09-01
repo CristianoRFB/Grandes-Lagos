@@ -21,7 +21,7 @@ import org.testcontainers.utility.DockerImageName;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Testcontainers(disabledWithoutDocker = true)
+@Testcontainers
 class BootstrapIntegrationTest {
 
     @Container

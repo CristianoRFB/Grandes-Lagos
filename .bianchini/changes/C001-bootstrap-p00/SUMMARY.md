@@ -30,7 +30,9 @@ also unavailable because the greenfield repository has no remote. These missing 
 
 - Bianchini 0.4 precheck and live skill discovery: PASS.
 - Approved coherence digest and isolated execution workspace: PASS.
-- Backend compile/package/verify command: PASS; PostgreSQL tests skipped due absent Docker.
+- QA-001 source correction: PASS; the mandatory Testcontainers gate now fails closed without Docker.
+- QA-001 RED: PASS with Maven exit 1, skipped=0 and Docker/Testcontainers error; GREEN remains blocked.
+- Native C001 naming/layout and workspace resolution: PASS for the unique `C001-bootstrap-p00` directory.
 - Frontend lockfile install, lint, typecheck and production build: PASS.
 - Managed dependency versions: PASS.
 - Shell syntax and YAML syntax: PASS.
@@ -44,12 +46,17 @@ also unavailable because the greenfield repository has no remote. These missing 
 - Backend/frontend container startup and HTTP health behavior.
 - Clean Compose bootstrap, teardown and successful `p00-verify` exit.
 - Actual GitHub Actions execution and green `p00` job.
+- QA-001 GREEN with Testcontainers and PostgreSQL 18.6 on a real Docker provider.
 
 ## Deviations and errors
 
 - The pinned Bianchini CLI has native-Windows path/`fsync` limitations. It was called via a
   temporary external compatibility shim that only disables directory `fsync`; upstream and repo
-  content were not modified. `PYTHONUTF8=1` was required for the accented source path.
+  content were not modified. The correction precheck resolved semantic `C001` to the unique
+  physical directory `C001-bootstrap-p00`; the shim was removed after validation.
+- A fresh `coherence check` without a new semantic report returned exit 0 and zero structural
+  findings but emitted `SEMANTIC_REVIEW_UNAVAILABLE`. Its transient writes were discarded and the
+  already approved coherence checkpoint from HEAD was preserved.
 - The CLI's generic `validate-state`/`status` paths are for its older `method_version: 2` state
   schema and reject the 0.4 index. The applicable 0.4 `workspace check` was used and returned
   `valid: true`; one earlier check mistakenly targeted the planning root and was corrected to the
