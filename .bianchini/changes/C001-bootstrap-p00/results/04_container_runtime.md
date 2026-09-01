@@ -2,7 +2,10 @@
 
 Observed at: 2026-09-01T12:59:00-03:00
 
-Status: **BLOCKED**
+Historical status at the observation time: **BLOCKED**
+
+Superseded on 2026-09-01 by the successful provider/runtime evidence in
+`08_docker_runtime_gates.md`. The entries below are retained as the earlier fail-closed checkpoint.
 
 - Docker executable was not present on `PATH` or in the standard Docker Desktop locations.
 - No Docker or Podman service/runtime was available.

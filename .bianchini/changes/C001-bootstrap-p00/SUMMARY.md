@@ -8,10 +8,10 @@ Bianchini semantic system state: **S0**
 
 P01: **BLOCKED**
 
-The approved P00 bootstrap artifacts are implemented in the isolated execution worktree. Backend
-and frontend build gates passed with the exact required toolchain. Runtime/container acceptance is
-blocked because this host has no Docker engine or Compose executable. A real GitHub Actions run is
-also unavailable because the greenfield repository has no remote. These missing gates prevent S1.
+The approved P00 bootstrap artifacts are implemented in the isolated execution worktree. Backend,
+frontend, Testcontainers, PostgreSQL/Flyway, image, Compose, HTTP, failure/recovery, cleanup and
+clean-bootstrap gates pass locally. A real GitHub Actions run remains unavailable because the
+greenfield repository has no remote. AC-016 therefore remains NOT_VERIFIED and prevents S1.
 
 ## Implemented
 
@@ -25,28 +25,32 @@ also unavailable because the greenfield repository has no remote. These missing 
 - Bounded, project-scoped `p00-up`, `p00-verify`, and `p00-down` scripts.
 - One sequential GitHub Actions `p00` job on Ubuntu 24.04 with the approved action versions.
 - Durable verification, acceptance, security and blocker evidence.
+- Spring Boot 4 modular Flyway and MVC starters required by the verified runtime.
+- Explicit LF checkout rule for the Linux-executed Maven wrapper.
 
 ## Verified
 
 - Bianchini 0.4 precheck and live skill discovery: PASS.
 - Approved coherence digest and isolated execution workspace: PASS.
-- QA-001 source correction: PASS; the mandatory Testcontainers gate now fails closed without Docker.
-- QA-001 RED: PASS with Maven exit 1, skipped=0 and Docker/Testcontainers error; GREEN remains blocked.
+- QA-001 source correction: PASS; the mandatory Testcontainers gate fails closed without Docker.
+- QA-001 GREEN: PASS against the real named-pipe Docker provider and PostgreSQL 18.6: 2 tests,
+  0 failures, 0 errors and 0 skips.
 - Native C001 naming/layout and workspace resolution: PASS for the unique `C001-bootstrap-p00` directory.
 - Frontend lockfile install, lint, typecheck and production build: PASS.
 - Managed dependency versions: PASS.
 - Shell syntax and YAML syntax: PASS.
 - `p00-verify` failure behavior without Docker: PASS (exit 1).
+- Docker image builds and Compose config/runtime: PASS.
+- PostgreSQL 18.6 and comment-only Flyway V0001 applied exactly once: PASS.
+- Backend liveness/readiness, restart, database failure and recovery: PASS.
+- Frontend container HTTP 200: PASS.
+- Canonical `p00-verify` in initial, clean-retry and detached clean-worktree runs: PASS.
+- Project-scoped teardown and empty post-cleanup inventory: PASS.
 - Security and implementation-scope audit: PASS.
 
 ## Not verified / blocked
 
-- Docker image builds and Compose config/runtime gates.
-- PostgreSQL startup, Flyway application and repeatability against a real PostgreSQL 18.6 instance.
-- Backend/frontend container startup and HTTP health behavior.
-- Clean Compose bootstrap, teardown and successful `p00-verify` exit.
 - Actual GitHub Actions execution and green `p00` job.
-- QA-001 GREEN with Testcontainers and PostgreSQL 18.6 on a real Docker provider.
 
 ## Deviations and errors
 
@@ -72,8 +76,22 @@ also unavailable because the greenfield repository has no remote. These missing 
 - npm emitted a deprecation warning for the scaffolded ESLint 9.39.5 transitive selection; lint
   passed and npm audit reported zero vulnerabilities. Dependency upgrades outside the pinned P00
   stack were not introduced.
+- The first Docker-backed QA-001 GREEN attempt found no Flyway bean under Spring Boot 4.1.1.
+  Commit `120a43b` changed the dependency to `spring-boot-starter-flyway`; the retry passed.
+- The first post-build `p00-up` found that the backend exited normally because no embedded web
+  server was present. Commit `8365abf` added `spring-boot-starter-webmvc`; the next run reached
+  healthy and the affected Maven gate remained green.
+- The first detached clean-worktree run hit a Docker Hub TLS handshake timeout before resource
+  creation. Its retry exposed CRLF checkout of `backend/mvnw` under `core.autocrlf=true` and failed
+  with `./mvnw: not found`. Commit `4bf64af` forces LF for `mvnw`; a recreated clean worktree passed
+  `p00-up`, `p00-verify` and `p00-down`.
+- `docker desktop status` printed `Status stopped`, while `docker version`, `docker info`, Compose
+  and all runtime gates succeeded. The Desktop subcommand output is retained as stale/inconsistent
+  environment evidence. Compose v5.5.0 was available rather than the baseline v2 wording.
 
 ## Gate decision
 
-AC-001..AC-022 are not all PASS. Per the approved CR, the plan remains executing, C001 is not
-complete, the semantic system state remains S0, and P01 remains blocked. See `results/05_acceptance.md`.
+All locally executable acceptance gates pass, but AC-016 is NOT_VERIFIED because no real GitHub
+Actions run exists. Therefore AC-001..AC-022 are not all PASS. Per the approved CR, the plan remains
+executing, C001 is not complete, the semantic system state remains S0, and P01 remains blocked. See
+`results/05_acceptance.md` and `results/08_docker_runtime_gates.md`.
