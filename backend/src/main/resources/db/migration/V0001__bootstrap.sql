@@ -1,0 +1,1 @@
+-- GL Operations P00: initial versioned Flyway milestone; intentionally no-op.
