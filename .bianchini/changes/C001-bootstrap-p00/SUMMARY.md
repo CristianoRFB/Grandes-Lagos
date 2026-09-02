@@ -10,8 +10,9 @@ P01: **BLOCKED**
 
 The approved P00 bootstrap artifacts are implemented in the isolated execution worktree. Backend,
 frontend, Testcontainers, PostgreSQL/Flyway, image, Compose, HTTP, failure/recovery, cleanup and
-clean-bootstrap gates pass locally. A real GitHub Actions run remains unavailable because the
-greenfield repository has no remote. AC-016 therefore remains NOT_VERIFIED and prevents S1.
+clean-bootstrap gates pass locally. Real GitHub Actions run `33685505704` tested the exact accepted
+technical SHA `3b8240e` in `CristianoRFB/Grandes-Lagos` and passed every mandatory P00 step. AC-016
+is now PASS. Final review, plan completion and the state transition remain outside this execution.
 
 ## Implemented
 
@@ -47,10 +48,14 @@ greenfield repository has no remote. AC-016 therefore remains NOT_VERIFIED and p
 - Canonical `p00-verify` in initial, clean-retry and detached clean-worktree runs: PASS.
 - Project-scoped teardown and empty post-cleanup inventory: PASS.
 - Security and implementation-scope audit: PASS.
+- GitHub Actions `P00 CI` run `33685505704` against exact technical SHA `3b8240e`: PASS.
+- CI toolchain, Maven/Testcontainers 2/0/0/0, PostgreSQL 18.6, frontend build, Compose images,
+  runtime failure/recovery verification and cleanup: PASS with no required skipped step.
 
-## Not verified / blocked
+## Pending governance
 
-- Actual GitHub Actions execution and green `p00` job.
+- Final review and explicit C001 transition.
+- Plan completion, S1 promotion and P01 unblocking remain deliberately unexecuted.
 
 ## Deviations and errors
 
@@ -88,10 +93,17 @@ greenfield repository has no remote. AC-016 therefore remains NOT_VERIFIED and p
 - `docker desktop status` printed `Status stopped`, while `docker version`, `docker info`, Compose
   and all runtime gates succeeded. The Desktop subcommand output is retained as stale/inconsistent
   environment evidence. Compose v5.5.0 was available rather than the baseline v2 wording.
+- GitHub selected `bm/c001-p00` as the default branch after the first push to the previously empty
+  repository. This was the existing local branch and no rename, `main` ref, force or history rewrite
+  was used.
+- GitHub emitted a non-blocking annotation that `actions/checkout@v4` and `actions/setup-node@v4`
+  target Node.js 20 internally and were forced onto Node.js 24. Both steps and the complete run
+  succeeded; no mandatory P00 gate was skipped or masked.
 
 ## Gate decision
 
-All locally executable acceptance gates pass, but AC-016 is NOT_VERIFIED because no real GitHub
-Actions run exists. Therefore AC-001..AC-022 are not all PASS. Per the approved CR, the plan remains
-executing, C001 is not complete, the semantic system state remains S0, and P01 remains blocked. See
-`results/05_acceptance.md` and `results/08_docker_runtime_gates.md`.
+AC-001..AC-022 now pass, including AC-016 through real GitHub Actions run `33685505704`. This
+CI-evidence execution is not authorized to perform the final review, plan completion or state
+transition. C001 therefore remains not complete, the plan remains executing, the semantic system
+state remains S0, and P01 remains blocked. See `results/05_acceptance.md`,
+`results/08_docker_runtime_gates.md`, and `results/09_ci_github_actions.md`.

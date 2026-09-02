@@ -1,6 +1,6 @@
 # Acceptance matrix
 
-Observed through: 2026-09-01T20:01:11-03:00
+Observed through: 2026-09-02T18:33:37-03:00
 
 | AC | Status | Rerun | Evidence |
 |---|---|---|---|
@@ -19,12 +19,12 @@ Observed through: 2026-09-01T20:01:11-03:00
 | AC-013 | PASS | YES | Compose brought all three services healthy in initial, clean-retry and isolated runs. |
 | AC-014 | PASS | YES | Frontend container returned HTTP 200 with the `GL Operations — P00` shell. |
 | AC-015 | PASS | YES | Canonical `p00-verify` exited 0 in initial, clean-retry and isolated runs. |
-| AC-016 | NOT_VERIFIED | N/A | Workflow exists, but repository has no remote and no real GitHub Actions run was executed. |
+| AC-016 | PASS | YES | Real GitHub Actions run `33685505704` tested exact technical SHA `3b8240e` in `CristianoRFB/Grandes-Lagos`; workflow/job/all mandatory steps succeeded with no required skip. |
 | AC-017 | PASS | NO | Ignore rules cover runtime env, targets, node_modules, dist and Bianchini runtime; no real secrets found. |
 | AC-018 | PASS | YES | Runtime schema query returned zero public application tables; no P01+, business endpoint, JPA/ORM or TanStack Query was introduced. |
-| AC-019 | PASS | YES | Durable factual evidence exists under the unique native directory `.bianchini/changes/C001-bootstrap-p00/results`, including `08_docker_runtime_gates.md`. |
-| AC-020 | PASS | YES | SUMMARY records runtime results, corrections and the remaining AC-016 blocker. |
+| AC-019 | PASS | YES | Durable factual evidence exists under the unique native directory `.bianchini/changes/C001-bootstrap-p00/results`, including local runtime and real CI evidence. |
+| AC-020 | PASS | YES | SUMMARY records local runtime results, real CI success and the remaining final-review/governance boundary. |
 | AC-021 | PASS | YES | Workspace and model checks returned valid after corrections; semantic `C001` remains unambiguous and the approved coherence checkpoint is preserved. |
 | AC-022 | PASS | YES | Git scope audit found only P00 bootstrap, focused runtime corrections and durable evidence. |
-| AC-023 | BLOCKED | N/A | AC-016 is not PASS; state must remain S0. |
-| AC-024 | BLOCKED | N/A | S1 was not reached; P01 remains blocked. |
+| AC-023 | BLOCKED | N/A | AC-001..AC-022 now pass, but this CI-evidence prompt explicitly defers final review and state transition; S0 is preserved. |
+| AC-024 | BLOCKED | N/A | Final review/transition and plan completion remain pending; P01 stays blocked. |
