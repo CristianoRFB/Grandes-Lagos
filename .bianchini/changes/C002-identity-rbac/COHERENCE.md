@@ -1,7 +1,7 @@
 ---
 {
   "approval": {
-    "approved_at": "2026-09-09T21:18:40+00:00",
+    "approved_at": "2026-09-09T21:20:00+00:00",
     "approved_by": "00 — ROUTER / ORQUESTRADOR",
     "digest": "7500d455472e283934892670336cd43e661c99ffdd5fcdfaea596b3643f8d011"
   },
@@ -143,7 +143,7 @@
   "stale_plans": [],
   "status": "approved",
   "structural_only": false,
-  "updated_at": "2026-09-09T21:18:40+00:00"
+  "updated_at": "2026-09-09T21:20:00+00:00"
 }
 ---
 
