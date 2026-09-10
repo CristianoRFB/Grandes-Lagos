@@ -93,6 +93,7 @@ wait_for_success "backend readiness after restart" "$READINESS_URL"
 assert_single_migration
 
 compose stop postgres
+compose restart backend
 wait_for_failure "readiness fails without database" "$READINESS_URL"
 wait_for_success "liveness remains healthy without database" "$LIVENESS_URL"
 
