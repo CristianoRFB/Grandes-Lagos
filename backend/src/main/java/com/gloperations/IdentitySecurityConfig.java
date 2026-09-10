@@ -9,9 +9,13 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class IdentitySecurityConfig {
+    @Bean
+    PasswordEncoder passwordEncoder() { return PasswordEncoderFactories.createDelegatingPasswordEncoder(); }
     @Bean
     JdbcUserDetailsManager users(DataSource ds) {
         JdbcUserDetailsManager m = new JdbcUserDetailsManager(ds);
