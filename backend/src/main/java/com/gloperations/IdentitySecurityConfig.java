@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.http.HttpStatus;
 
 @Configuration
 public class IdentitySecurityConfig {
@@ -23,6 +25,7 @@ public class IdentitySecurityConfig {
             .authorizeHttpRequests(a -> a.requestMatchers("/actuator/health/**").permitAll().requestMatchers("/api/auth/login").permitAll().anyRequest().authenticated())
             .formLogin(f -> f.loginProcessingUrl("/api/auth/login").successHandler((r,s,a)->s.setStatus(200)).failureHandler((r,s,e)->s.setStatus(401)))
             .logout(l -> l.logoutUrl("/api/auth/logout").logoutSuccessHandler((r,s,a)->s.setStatus(204)))
+            .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
             .sessionManagement(s -> s.sessionFixation().migrateSession());
         return http.build();
     }

@@ -5,6 +5,10 @@ spring:
     enabled: true
 
 management:
+server:
+  servlet:
+    session:
+      timeout: 30m
   endpoint:
     health:
       probes:
