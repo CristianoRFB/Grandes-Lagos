@@ -45,6 +45,7 @@ class BootstrapIntegrationTest {
                 Integer.class);
 
         assertThat(historyRows).isEqualTo(1);
+        assertThat(jdbc.queryForObject("select count(*) from flyway_schema_history where success", Integer.class)).isEqualTo(3);
         assertThat(flyway.migrate().migrationsExecuted).isZero();
 
         Integer checksumAfter = jdbc.queryForObject(
@@ -62,7 +63,7 @@ class BootstrapIntegrationTest {
                 .dataSource(rebuildUrl, POSTGRES.getUsername(), POSTGRES.getPassword())
                 .load();
 
-        assertThat(rebuild.migrate().migrationsExecuted).isEqualTo(1);
+        assertThat(rebuild.migrate().migrationsExecuted).isEqualTo(3);
         assertThat(rebuild.migrate().migrationsExecuted).isZero();
 
         try (Connection connection = DriverManager.getConnection(

@@ -47,6 +47,10 @@ jobs:
         working-directory: backend
         run: ./mvnw -B verify
 
+      - name: P01 security gate
+        working-directory: backend
+        run: ./mvnw -B -Dtest=IdentityContractTest test
+
       - name: Install frontend dependencies
         working-directory: frontend
         run: npm ci
