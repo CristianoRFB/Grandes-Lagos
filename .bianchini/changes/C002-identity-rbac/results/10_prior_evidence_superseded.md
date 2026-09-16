@@ -1,3 +1,17 @@
+# Historical evidence — superseded, retained verbatim below
+
+This historical report was written at commit `654e5ea`. It is retained for
+traceability, not accepted as current proof. In particular, the attribution of
+readiness failure to a surviving pooled connection was not supported. The
+confirmed cause is the YAML indentation introduced in `c76d405`: health settings
+were nested under `server`, leaving `management` empty. See the resumed evidence
+for the observed configuration RED/GREEN and runtime revalidation.
+
+The old test counts are different historical executions, not a final combined
+suite. All old pending CI claims are stale. No C002 `plan complete` ran; this file
+has been moved out of the reserved `results/P01.md` name to avoid implying a
+native plan completion. Its previous content follows unchanged.
+
 # C002/P01 technical evidence
 
 Status: implementation and verification in progress; ready for review 06 only

@@ -1,18 +1,33 @@
 package com.gloperations;
 
-import java.util.Map;
+import static com.gloperations.IdentityDtos.*;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.ProblemDetail;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class IdentityController {
     private final CapabilityAuthorizationService authorization;
-    IdentityController(CapabilityAuthorizationService authorization) { this.authorization = authorization; }
+    private final IdentityRepository identities;
+    IdentityController(CapabilityAuthorizationService authorization, IdentityRepository identities) {
+        this.authorization = authorization;
+        this.identities = identities;
+    }
+    @GetMapping("/api/auth/csrf")
+    CsrfSummary csrf(CsrfToken token) { return new CsrfSummary(token.getHeaderName(), token.getToken()); }
     @GetMapping("/api/auth/me")
-    Map<String,String> me(Authentication a) { return Map.of("username", a.getName()); }
+    CurrentIdentity me(Authentication authentication) {
+        return authorization.currentIdentity(((IdentityPrincipal) authentication.getPrincipal()).id());
+    }
     @GetMapping("/api/identity/users")
-    Map<String,String> users(Authentication a) { if (!authorization.allows(a.getName(), "identity.manage", "GLOBAL", null)) throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.FORBIDDEN); return Map.of("status","ok"); }
+    BoundedList<UserSummary> users() { return identities.users(); }
     @GetMapping("/api/identity/roles")
-    Map<String,String> roles(Authentication a) { if (!authorization.allows(a.getName(), "identity.manage", "GLOBAL", null)) throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.FORBIDDEN); return Map.of("status","ok"); }
+    BoundedList<RoleSummary> roles() { return identities.roles(); }
+
+    @ExceptionHandler(DataAccessException.class)
+    ProblemDetail databaseUnavailable() { return IdentityProblemResponses.unavailable(); }
 }

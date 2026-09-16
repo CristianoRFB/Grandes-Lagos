@@ -52,14 +52,16 @@ wait_for_success() {
   return 1
 }
 
-wait_for_failure() {
+wait_for_unavailable() {
   label=$1
   url=$2
   attempts=${3:-20}
   count=1
   while [ "$count" -le "$attempts" ]; do
-    if ! curl --fail --silent --output /dev/null --max-time 3 "$url"; then
-      echo "PASS: ${label}"
+    # A refused connection or a timeout is not evidence of a working health probe.
+    status=$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 5 "$url") || status=000
+    if [ "$status" = "503" ]; then
+      echo "PASS: ${label} (HTTP 503)"
       return 0
     fi
     count=$((count + 1))
@@ -93,7 +95,7 @@ wait_for_success "backend readiness after restart" "$READINESS_URL"
 assert_single_migration
 
 compose stop postgres
-wait_for_failure "readiness fails without database" "$READINESS_URL"
+wait_for_unavailable "readiness fails without database" "$READINESS_URL"
 wait_for_success "liveness remains healthy without database" "$LIVENESS_URL"
 
 compose start postgres

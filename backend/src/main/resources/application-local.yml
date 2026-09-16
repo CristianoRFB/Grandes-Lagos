@@ -3,3 +3,12 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/gl_operations}
     username: ${SPRING_DATASOURCE_USERNAME:gl_operations}
     password: ${SPRING_DATASOURCE_PASSWORD:gl_operations_local_only}
+    hikari:
+      connection-timeout: 2000
+
+# The local Compose environment uses HTTP. All other profiles require HTTPS cookies.
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
