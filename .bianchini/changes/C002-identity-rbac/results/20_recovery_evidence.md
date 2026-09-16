@@ -97,9 +97,8 @@ failure/error/skip elements. Frontend `node:24.20.0-alpine` with npm 11.19.0
 also passed `npm ci`, `npm run build` and `npm run lint`; log:
 `C:\Users\MICRO-10\Downloads\c002-frontend-build.log`.
 
-The remaining release gates are Compose/P00 outage-recovery, final commit/push,
-and the real GitHub Actions run on that exact SHA. No remote GREEN is claimed
-until those are observed.
+The remaining closeout handoff is factual review 06; no native plan completion or
+closeout is implied by these technical gates.
 
 ## Compose / P00 runtime
 
@@ -123,6 +122,26 @@ P00 verification passed
 The final `scripts/p00-down.sh` removed all three containers, the Compose volume
 and network; `docker compose ... ps -a` returned no rows. Runtime log:
 `C:\Users\MICRO-10\Downloads\c002-p00-verify.log`.
+
+## GitHub Actions evidence
+
+Push of technical commits `2f5e765` and `564a94e` produced the real run
+[35124406067](https://github.com/CristianoRFB/Grandes-Lagos/actions/runs/35124406067)
+on exact head `564a94eb047f728d7f5103642fb5b359a4467533`. It concluded `success`;
+job `p00` and every step passed. Sanitized log evidence is retained outside Git
+at `C:\Users\MICRO-10\Downloads\c002-ci-35124406067.log`:
+
+- `Verify backend`: 59 tests, 0 failures/errors/skips, `BUILD SUCCESS`.
+- `P01 security gate`: suites 3 + 16 + 5 + 4 + 28, total 56, all zero
+  failures/errors/skips; `P01 gate passed: 56 required test executions`.
+- Frontend dependencies/build and Compose validation/image builds passed.
+- `Verify P00 stack`: all liveness/readiness/frontend/Flyway/restart/outage/
+  recovery assertions passed, including `readiness fails without database
+  (HTTP 503)` and final `P00 verification passed`.
+- `Clean up P00 stack` passed.
+
+This proves a technical GREEN candidate on that SHA. It does not resolve the
+historical Bianchini evidence gaps described below and is not a closeout.
 
 ## Historical governance findings for Router / 06
 
@@ -154,8 +173,21 @@ and network; `docker compose ... ps -a` returned no rows. Runtime log:
   recovery authorization permits continuing corrections without replanning;
   it does not resolve these approval-evidence gaps or authorize closeout.
 
-## Acceptance
+## Acceptance revalidation
 
-Final AC-P01-001..028 matrix pending technical verification. Historical AC003 is
-incomplete; AC002/004 are not fully evidenced. Closeout eligibility must therefore
-remain blocked even if the technical candidate passes all runtime gates.
+| AC | Evidence status |
+|---|---|
+| AC-P01-001 | C001 S1 baseline retained; technical regression green |
+| AC-P01-002 | Native C002 creation not independently evidenced in repository |
+| AC-P01-003 | NOT_VERIFIED: frozen plan lacks the complete artifact/route/migration contract |
+| AC-P01-004 | NOT_VERIFIED: native workspace check fails missing/ambiguous metadata |
+| AC-P01-005..021 | TECHNICALLY_PASS: source, 59-test verify, Testcontainers and P00 gates |
+| AC-P01-022 | TECHNICALLY_PASS: 401/200/403, revocation, logout, CSRF and real HTTP timeout |
+| AC-P01-023 | PASS: real run 35124406067 on exact SHA 564a94e |
+| AC-P01-024..026 | PASS by source review and scoped diff; no secrets/P02/domain creep found |
+| AC-P01-027 | BLOCKED by AC-P01-002..004 evidence, and still forbidden before 06 review |
+| AC-P01-028 | PASS: P02 remains NOT STARTED |
+
+The technical implementation is ready for 06 review. Closeout eligibility remains
+blocked until the Router/06 process resolves or explicitly accepts the historical
+governance evidence gaps; this recovery does not rewrite them.
