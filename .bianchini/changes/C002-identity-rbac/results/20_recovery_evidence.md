@@ -101,6 +101,29 @@ The remaining release gates are Compose/P00 outage-recovery, final commit/push,
 and the real GitHub Actions run on that exact SHA. No remote GREEN is claimed
 until those are observed.
 
+## Compose / P00 runtime
+
+On 2026-09-16, `scripts/p00-up.sh` built both images from the committed source
+and started PostgreSQL 18.6, the Spring backend and the frontend with all health
+checks healthy. `scripts/p00-verify.sh` then passed every assertion:
+
+```text
+backend liveness
+backend readiness with database
+frontend HTTP
+Flyway V0001 recorded exactly once
+backend readiness after restart
+readiness fails without database (HTTP 503)
+liveness remains healthy without database
+readiness recovers with database
+Flyway V0001 recorded exactly once
+P00 verification passed
+```
+
+The final `scripts/p00-down.sh` removed all three containers, the Compose volume
+and network; `docker compose ... ps -a` returned no rows. Runtime log:
+`C:\Users\MICRO-10\Downloads\c002-p00-verify.log`.
+
 ## Historical governance findings for Router / 06
 
 - The isolated Git worktree exists and is outside the primary branch. However,
