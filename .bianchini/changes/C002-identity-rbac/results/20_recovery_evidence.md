@@ -143,6 +143,12 @@ at `C:\Users\MICRO-10\Downloads\c002-ci-35124406067.log`:
 This proves a technical GREEN candidate on that SHA. It does not resolve the
 historical Bianchini evidence gaps described below and is not a closeout.
 
+The subsequent evidence/SUMMARY commit `3280f20` was also verified by the final
+run [35124977015](https://github.com/CristianoRFB/Grandes-Lagos/actions/runs/35124977015)
+on exact SHA `3280f201add1058b7c6ca44ba2a55270c61127c0`, conclusion `success`.
+Its `p00` job passed every step, including backend verify, the strict P01 gate,
+frontend build, Compose/image gates, P00 outage/recovery and cleanup.
+
 ## Historical governance findings for Router / 06
 
 - The isolated Git worktree exists and is outside the primary branch. However,
